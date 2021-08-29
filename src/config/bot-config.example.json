@@ -1,0 +1,14 @@
+{
+  "name": "Yue",
+  "statusList": ["a", "list", "of", "status"],
+  "statusType": "LISTENING",
+  "token": "secret",
+  "env": "dev",
+  "dev": {
+    "clientId": "123456789",
+    "guildId": "123456789"
+  },
+  "author": {
+    "avatar": "https://cdn.discordapp.com/avatars/252029078452961280/551ebcf0c6e6a3807c54afef6d70a04c.png?size=1024"
+  }
+}
