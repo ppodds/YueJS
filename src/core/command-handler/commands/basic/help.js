@@ -17,11 +17,6 @@ module.exports = {
                 inline: false,
             },
             {
-                name: ":heart: :hearts: :heart: 指令清單 :heart: :hearts: :heart:",
-                value: "----------------------------------------------------------",
-                inline: false,
-            },
-            {
                 name: "help",
                 value: "指令說明",
                 inline: false,
@@ -62,7 +57,7 @@ module.exports = {
                 inline: false,
             },
             {
-                name: "choose　【內容1】　【內容2】",
+                name: "choose　【內容1】,【內容2】",
                 value: "在各項內容中抽一個(內容數量無上限)",
                 inline: false,
             },
