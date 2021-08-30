@@ -16,6 +16,23 @@ cd YueJS
 npm install
 ```
 
-Second, configure the config files as you own. (at `src/config`)
+Second, configure the config files. (at `src/config`)
+
+```json
+{
+    "name": "Bot name",
+    "statusList": ["a", "list", "of", "status"],
+    "statusType": "Bot status type, either 'PLAYING', 'LISTENING' or 'WATCHING'",
+    "token": "your token. you can get it on Developer panel",
+    "env": "dev or prod",
+    "dev": {
+        "clientId": "123456789",
+        "guildId": "123456789"
+    },
+    "author": {
+        "avatar": "author avator url"
+    }
+}
+```
 
 Final, use `npm run start` check whether it can work.
