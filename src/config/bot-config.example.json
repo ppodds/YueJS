@@ -9,6 +9,7 @@
     "guildId": "123456789"
   },
   "author": {
+    "id": "your discord id",
     "avatar": "https://cdn.discordapp.com/avatars/252029078452961280/551ebcf0c6e6a3807c54afef6d70a04c.png?size=1024"
   }
 }

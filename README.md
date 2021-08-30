@@ -27,7 +27,7 @@ bot-config.json
     "name": "Bot name",
     "statusList": ["a", "list", "of", "status"],
     "statusType": "Bot status type, either 'PLAYING', 'LISTENING' or 'WATCHING'",
-    "token": "your token. you can get it on Developer panel",
+    "token": "your token. you can get it on Developer portal",
     "env": "dev or prod",
     "dev": {
         "clientId": "123456789",
@@ -69,3 +69,13 @@ Note:
 `env` in `bot-config.json` affacts the process of deploying commands. If `env` is `prod`, `npm run reg` would deploy commands globally.
 
 Now you can use `npm run start` check whether it can work.
+
+Note:
+If you get this error
+
+```
+Privileged intent provided is not enabled or whitelisted.
+```
+
+Try to enable options below
+![Discord Bot Portal Intents](docs/intent.png)

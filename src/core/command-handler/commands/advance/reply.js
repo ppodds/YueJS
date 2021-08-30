@@ -2,7 +2,6 @@ const { SlashCommandBuilder } = require("@discordjs/builders");
 const { Reply } = require("../../../database/models/reply");
 const Logger = require("../../../utils/logger");
 const { info } = require("../../../graphics/embeds");
-const reply = require("../../../database/models/reply");
 
 module.exports = {
     data: new SlashCommandBuilder()
@@ -52,7 +51,7 @@ module.exports = {
                     scope: interaction.inGuild()
                         ? interaction.guildId
                         : interaction.user.id,
-                    fomatted: false,
+                    formatted: false,
                 },
                 defaults: {
                     response: response,
@@ -81,7 +80,7 @@ module.exports = {
                     scope: interaction.inGuild()
                         ? interaction.guildId
                         : interaction.user.id,
-                    fomatted: false,
+                    formatted: false,
                 },
             });
 
@@ -98,7 +97,7 @@ module.exports = {
                     scope: interaction.inGuild()
                         ? interaction.guildId
                         : interaction.user.id,
-                    fomatted: false,
+                    formatted: false,
                 },
                 attributes: ["key", "response"],
             });
