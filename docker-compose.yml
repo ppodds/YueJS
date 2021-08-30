@@ -1,0 +1,23 @@
+version: "2"
+services:
+  database:
+    image: mariadb:latest
+    restart: always
+    volumes:
+      - dbdata:/var/lib/mysql
+    environment:
+      - "MYSQL_DATABASE=Yue"
+      - "MYSQL_USER=Yue"
+      - "MYSQL_PASSWORD=test"
+      - "MARIADB_ROOT_PASSWORD=test"
+    ports:
+      - "3306:3306"
+  adminer:
+    image: adminer:latest
+    restart: always
+    ports:
+      - 80:8080
+    environment:
+      ADMINER_DEFAULT_SERVER: database
+volumes:
+  dbdata:

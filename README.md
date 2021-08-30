@@ -8,7 +8,7 @@ This is a JavaScript rewrite version of my Discord bot Yue. Yue was using in NCU
 
 **Node.js 16.6.0 or newer is required.**
 
-First, clone this repository.
+### Clone The Repository
 
 ```shell
 git clone https://github.com/ppodds/YueJS.git
@@ -16,7 +16,11 @@ cd YueJS
 npm install
 ```
 
-Second, configure the config files. (at `src/config`)
+### Configure Config Files
+
+config files at `src/config`
+
+bot-config.json
 
 ```json
 {
@@ -35,4 +39,33 @@ Second, configure the config files. (at `src/config`)
 }
 ```
 
-Final, use `npm run start` check whether it can work.
+db-config.json
+
+```json
+{
+    "host": "localhost",
+    "port": 3306,
+    "user": "Yue",
+    "password": "test",
+    "database": "Yue"
+}
+```
+
+### Prepare Database
+
+You need to install [mariadb](https://mariadb.org/download/) and sure it could work properly.
+
+There is a `docker-compose.yml` can build a test database service in few minutes. If you use it, you don't need to change `db-config.json`.
+
+### Run Bot
+
+Before you run the bot, you should deploy commands first.
+
+```shell
+npm run reg
+```
+
+Note:
+`env` in `bot-config.json` affacts the process of deploying commands. If `env` is `prod`, `npm run reg` would deploy commands globally.
+
+Now you can use `npm run start` check whether it can work.
