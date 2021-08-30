@@ -2,10 +2,10 @@ const { Sequelize } = require("sequelize");
 const dbConfig = require("../../config/db-config.json");
 const { env } = require("../../config/bot-config.json");
 const Logger = require("../utils/logger");
-const user = require("./model/user");
-const grab = require("./model/grab");
-const image = require("./model/image");
-const reply = require("./model/reply");
+const user = require("./models/user");
+const grab = require("./models/grab");
+const image = require("./models/image");
+const reply = require("./models/reply");
 
 let loggingSetting;
 
