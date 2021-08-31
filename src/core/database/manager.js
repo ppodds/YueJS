@@ -6,6 +6,7 @@ const user = require("./models/user");
 const grab = require("./models/grab");
 const image = require("./models/image");
 const reply = require("./models/reply");
+const donor = require("./models/donor");
 
 let loggingSetting;
 
@@ -33,6 +34,7 @@ module.exports = {
         grab.init(sequelize);
         image.init(sequelize);
         reply.init(sequelize);
+        donor.init(sequelize);
 
         await sequelize.sync();
         Logger.info("資料庫系統檢查完畢");
