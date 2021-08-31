@@ -10,6 +10,7 @@
     "@discordjs/opus": "^0.6.0",
     "@discordjs/rest": "^0.1.0-canary.0",
     "@discordjs/voice": "^0.6.0",
+    "axios": "^0.21.1",
     "beautify.log": "^2.1.2",
     "bufferutil": "^4.0.3",
     "discord-api-types": "^0.22.0",
