@@ -15,6 +15,12 @@ module.exports = {
             subcommand
                 .setName("add")
                 .setDescription("新增對話回應")
+                .addBooleanOption((option) =>
+                    option
+                        .setName("global")
+                        .setDescription("是否全域")
+                        .setRequired(true)
+                )
                 .addStringOption((option) =>
                     option
                         .setName("key")
@@ -32,6 +38,12 @@ module.exports = {
             subcommand
                 .setName("del")
                 .setDescription("刪除對話回應")
+                .addBooleanOption((option) =>
+                    option
+                        .setName("global")
+                        .setDescription("是否全域")
+                        .setRequired(true)
+                )
                 .addStringOption((option) =>
                     option
                         .setName("key")
@@ -40,9 +52,31 @@ module.exports = {
                 )
         )
         .addSubcommand((subcommand) =>
-            subcommand.setName("list").setDescription("檢視對話回應清單")
+            subcommand
+                .setName("list")
+                .setDescription("檢視對話回應清單")
+                .addBooleanOption((option) =>
+                    option
+                        .setName("global")
+                        .setDescription("是否全域")
+                        .setRequired(true)
+                )
         ),
     async execute(interaction) {
+        const isGlobal = interaction.options.getBoolean("global");
+        function getDm() {
+            if (interaction.inGuild()) {
+                if (isGlobal) return true;
+                else return false;
+            } else return true;
+        }
+        function getScope() {
+            if (interaction.inGuild()) {
+                if (isGlobal) return interaction.user.id;
+                else return interaction.guildId;
+            } else return interaction.user.id;
+        }
+
         if (interaction.options.getSubcommand() === "add") {
             const key = interaction.options.getString("key");
             const response = interaction.options.getString("response");
@@ -51,10 +85,8 @@ module.exports = {
             const [reply, created] = await Reply.findOrCreate({
                 where: {
                     key: key,
-                    dm: !interaction.inGuild(),
-                    scope: interaction.inGuild()
-                        ? interaction.guildId
-                        : interaction.user.id,
+                    dm: getDm(),
+                    scope: getScope(),
                     formatted: false,
                 },
                 defaults: {
@@ -69,7 +101,9 @@ module.exports = {
                         interaction.inGuild()
                             ? interaction.guildId
                             : "dm channel"
-                    } key；{key} response: {value}`
+                    } key；{key} response: {value} ${
+                        interaction.inGuild() ? "global: " + isGlobal : ""
+                    }`
                 );
             } else {
                 await interaction.reply("好像已經有人對Yue下過相同的指示了呢~");
@@ -80,10 +114,8 @@ module.exports = {
             const reply = await Reply.findOne({
                 where: {
                     key: key,
-                    dm: !interaction.inGuild(),
-                    scope: interaction.inGuild()
-                        ? interaction.guildId
-                        : interaction.user.id,
+                    dm: getDm(),
+                    scope: getScope(),
                     formatted: false,
                 },
             });
@@ -97,10 +129,8 @@ module.exports = {
         } else if (interaction.options.getSubcommand() === "list") {
             const replies = await Reply.findAll({
                 where: {
-                    dm: !interaction.inGuild(),
-                    scope: interaction.inGuild()
-                        ? interaction.guildId
-                        : interaction.user.id,
+                    dm: getDm(),
+                    scope: getScope(),
                     formatted: false,
                 },
                 attributes: ["key", "response"],
