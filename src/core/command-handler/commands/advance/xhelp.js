@@ -12,11 +12,6 @@ module.exports = {
         );
         embed.addFields(
             {
-                name: "和Yue聊天的方式",
-                value: "「在訊息前加上-就可以和Yue說話啦~    嘻嘻~」",
-                inline: false,
-            },
-            {
                 name: "reply add 【全域】 【關鍵字】 【內容】",
                 value: "讓Yue在下次聽到你說這句話時回應你",
                 inline: false,

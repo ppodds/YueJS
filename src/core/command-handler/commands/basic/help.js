@@ -12,11 +12,6 @@ module.exports = {
         );
         embed.addFields(
             {
-                name: "和Yue聊天的方式",
-                value: "「在訊息前加上-就可以和Yue說話啦~    嘻嘻~」",
-                inline: false,
-            },
-            {
                 name: "help",
                 value: "指令說明",
                 inline: false,
