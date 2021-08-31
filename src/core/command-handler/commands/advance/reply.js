@@ -1,7 +1,11 @@
 const { SlashCommandBuilder } = require("@discordjs/builders");
 const { Reply } = require("../../../database/models/reply");
 const Logger = require("../../../utils/logger");
-const { info } = require("../../../graphics/embeds");
+const {
+    info,
+    paginationEmbed,
+    paginationButton,
+} = require("../../../graphics/embeds");
 
 module.exports = {
     data: new SlashCommandBuilder()
@@ -102,44 +106,53 @@ module.exports = {
                 attributes: ["key", "response"],
             });
 
-            const embed = info(
-                interaction.client,
-                "「以前你跟我說過的這些~ Yue通通都記住了喔~ :heart:」"
-            );
+            function generateEmbed() {
+                const embed = info(
+                    interaction.client,
+                    "「以前你跟我說過的這些~ Yue通通都記住了喔~ :heart:」"
+                );
 
-            embed.addFields(
-                {
-                    name: "格式範例",
-                    value: "「待會Yue就用這種方式照著念喔~」",
-                    inline: false,
-                },
-                {
-                    name: "關鍵字",
-                    value: "回應內容",
-                    inline: false,
-                }
-            );
-
-            let hasReplied = false;
-            let count = 2;
-            for (let reply of replies) {
-                if (count === 25) {
-                    if (hasReplied)
-                        await interaction.followUp({ embeds: [embed] });
-                    else await interaction.reply({ embeds: [embed] });
-                    count = 3;
-                    embed.spliceFields(2, 23, {
-                        name: reply.key,
-                        value: reply.response,
+                embed.addFields(
+                    {
+                        name: "格式範例",
+                        value: "「待會Yue就用這種方式照著念喔~」",
                         inline: false,
-                    });
-                } else {
-                    count++;
-                    embed.addField(reply.key, reply.response);
-                }
+                    },
+                    {
+                        name: "關鍵字",
+                        value: "回應內容",
+                        inline: false,
+                    }
+                );
+                return embed;
             }
-            if (hasReplied) await interaction.followUp({ embeds: [embed] });
-            else await interaction.reply({ embeds: [embed] });
+
+            // don't need paginationEmbed
+            if (replies.length <= 23) {
+                let embed = generateEmbed();
+                replies.forEach((reply) =>
+                    embed.addField(reply.key, reply.response)
+                );
+                await interaction.reply({ embeds: [embed] });
+            } else {
+                // generate pages
+                let i = 0;
+                const pagesData = [];
+                while (i < replies.length) {
+                    pagesData.push(replies.slice(i, (i += 23)));
+                }
+
+                const pages = [];
+                pagesData.forEach((pageData) => {
+                    let embed = generateEmbed();
+                    pageData.forEach((reply) => {
+                        embed.addField(reply.key, reply.response);
+                    });
+                    pages.push(embed);
+                });
+
+                await paginationEmbed(interaction, pages, paginationButton());
+            }
         }
     },
 };

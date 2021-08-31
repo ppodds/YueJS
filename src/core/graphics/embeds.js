@@ -1,4 +1,9 @@
-const { MessageEmbed } = require("discord.js");
+const {
+    Message,
+    MessageActionRow,
+    MessageEmbed,
+    MessageButton,
+} = require("discord.js");
 const colors = require("./colors");
 const { author } = require("../../config/bot-config.json");
 
@@ -25,5 +30,116 @@ module.exports = {
             .setAuthor(client.user.username, client.user.displayAvatarURL())
             .setDescription(description)
             .setFooter("由ppodds親手調教", author);
+    },
+    /**
+     * Send a pagination embed reply
+     * @param {Interaction} interaction interaction object of interaction event
+     * @param {MessageEmbed[]} pages an array of MessageEmbed, each one is a page of paginationEmbed
+     * @param {MessageButton[]} buttonList an array of MessageButton which length is 2
+     * @param {number} timeout timeout(ms)
+     * @returns {Promise<Message>} reply message
+     */
+    async paginationEmbed(interaction, pages, buttonList, timeout = 120000) {
+        // reference: https://github.com/ryzyx/discordjs-button-pagination
+
+        if (!pages) throw new Error("Pages are not given.");
+        if (!buttonList) throw new Error("Buttons are not given.");
+        if (buttonList[0].style === "LINK" || buttonList[1].style === "LINK")
+            throw new Error("Link buttons are not supported");
+        if (buttonList.length !== 2) throw new Error("Need two buttons.");
+
+        let page = 0;
+
+        const originDescription = pages[page].description;
+        const row = new MessageActionRow().addComponents(buttonList);
+        const curPage = await interaction.reply({
+            embeds: [
+                pages[page].setDescription(
+                    originDescription +
+                        `
+                        目前顯示的是第 ${page + 1} 頁的結果 共有 ${
+                            pages.length
+                        } 頁`
+                ),
+            ],
+            components: [row],
+            fetchReply: true,
+        });
+
+        const filter = (i) =>
+            i.customId === buttonList[0].customId ||
+            i.customId === buttonList[1].customId;
+
+        const collector = await curPage.createMessageComponentCollector({
+            filter,
+            time: timeout,
+        });
+
+        collector.on("collect", async (i) => {
+            switch (i.customId) {
+                case buttonList[0].customId:
+                    page = page > 0 ? --page : pages.length - 1;
+                    break;
+                case buttonList[1].customId:
+                    page = page + 1 < pages.length ? ++page : 0;
+                    break;
+                default:
+                    break;
+            }
+            await i.deferUpdate();
+            await i.editReply({
+                embeds: [
+                    pages[page].setDescription(
+                        originDescription +
+                            `
+                            目前顯示的是第 ${page + 1} 頁的結果 共有 ${
+                                pages.length
+                            } 頁`
+                    ),
+                ],
+                components: [row],
+            });
+            collector.resetTimer();
+        });
+
+        collector.on("end", () => {
+            if (!curPage.deleted) {
+                const disabledRow = new MessageActionRow().addComponents(
+                    buttonList[0].setDisabled(true),
+                    buttonList[1].setDisabled(true)
+                );
+                curPage.edit({
+                    embeds: [
+                        pages[page].setDescription(
+                            originDescription +
+                                `
+                                目前顯示的是第 ${page + 1} 頁的結果 共有 ${
+                                    pages.length
+                                } 頁`
+                        ),
+                    ],
+                    components: [disabledRow],
+                });
+            }
+        });
+
+        return curPage;
+    },
+    /**
+     * Generate a button list for paginationEmbed
+     * @returns {MessageButton[]} a button list for paginationEmbed
+     */
+    paginationButton() {
+        const buttonList = [
+            new MessageButton()
+                .setCustomId("prevPage")
+                .setLabel("上一頁")
+                .setStyle("PRIMARY"),
+            new MessageButton()
+                .setCustomId("nextPage")
+                .setLabel("下一頁")
+                .setStyle("PRIMARY"),
+        ];
+        return buttonList;
     },
 };
