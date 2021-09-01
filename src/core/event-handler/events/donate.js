@@ -5,6 +5,8 @@ const axios = require("axios").default;
 const FileType = require("file-type");
 const { Image } = require("../../database/models/image");
 const { send } = require("../../graphics/message");
+const ImageManager = require("../../image/ImageManager");
+const { makeRegularImage } = require("../../image/imageSimilar");
 
 module.exports = {
     name: "messageCreate",
@@ -34,6 +36,19 @@ module.exports = {
                 const filetype = await FileType.fromBuffer(resp.data);
                 if (filetype.mime.startsWith("image/")) {
                     // TODO check if image has existed in database
+                    const regularImage = await makeRegularImage(resp.data);
+                    const inDatabase = await ImageManager.inDatabase(
+                        donor.type,
+                        regularImage
+                    );
+                    if (inDatabase)
+                        // the picture is already in the database
+                        return await send(
+                            message.channel,
+                            "Yue已經有這個了....",
+                            20000
+                        );
+
                     const image = await Image.add(
                         donor.type,
                         message.author.id,
@@ -45,6 +60,7 @@ module.exports = {
                     Logger.info(
                         `${message.author.username} uploaded ${image.id}.${image.ext} type: ${image.type}`
                     );
+                    ImageManager.addImage(donor.type, regularImage);
                     if (!message.deleted && message.deletable)
                         await message.delete();
                 } else {

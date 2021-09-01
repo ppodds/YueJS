@@ -2,6 +2,7 @@ const Logger = require("../utils/logger");
 const { statusList, statusType } = require("../../config/bot-config.json");
 const commands = require("../command-handler/command-handler");
 const fs = require("fs");
+const ImageManager = require("../image/ImageManager");
 
 let discordClient;
 
@@ -28,11 +29,26 @@ module.exports = {
             // Updates the bot status every minute
             setInterval(() => updateBotStatus(), 60000);
 
+            // init command permission
+            const tasks = [];
+            commands.forEach((command, name) => {
+                if (command.init) {
+                    tasks.push(
+                        new Promise(async (resolve, reject) => {
+                            await command.init(client, name);
+                            resolve();
+                        })
+                    );
+                }
+            });
+            await Promise.all(tasks);
+
             Logger.info(
                 `Successfully launched in ${
                     (Date.now() - args.launchTimestamp) / 1000
                 } seconds!`
             );
+            await ImageManager.init();
         });
 
         // Slash commands
@@ -75,13 +91,21 @@ module.exports = {
         for (const file of eventFiles) {
             const event = require(`./events/${file}`);
             if (event.once) {
-                client.once(event.name, async (...args) =>
-                    event.execute(...args)
-                );
+                client.once(event.name, async (...args) => {
+                    try {
+                        await event.execute(...args);
+                    } catch (error) {
+                        Logger.error("Event threw an error", error);
+                    }
+                });
             } else {
-                client.on(event.name, async (...args) =>
-                    event.execute(...args)
-                );
+                client.on(event.name, async (...args) => {
+                    try {
+                        await event.execute(...args);
+                    } catch (error) {
+                        Logger.error("Event threw an error", error);
+                    }
+                });
             }
         }
     },

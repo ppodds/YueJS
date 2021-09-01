@@ -18,12 +18,12 @@ module.exports = {
 
     warn(text, warn) {
         const prefix = "{fgYellow}[BOTNAME - WARN] {reset}";
-        beautify.log(formatText(`${prefix + text}\n${warn}`));
+        beautify.log(formatText(`${prefix + text}${warn ? "\n" + warn : ""}`));
     },
 
     error(text, err) {
         const prefix = "{fgRed}[BOTNAME - ERROR] {reset}";
-        beautify.log(formatText(`${prefix + text}\n${err}`));
+        beautify.log(formatText(`${prefix + text}${err ? "\n" + err : ""}`));
     },
 
     command(ctx) {
