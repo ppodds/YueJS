@@ -35,6 +35,7 @@ RUN npm install async-lock \
     && npm install mariadb \
     && npm install sharp
 
-COPY . /app
+COPY ./src /app/src
+COPY ./index.js /app
 
 CMD [ "node" , "index.js"]

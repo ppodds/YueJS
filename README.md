@@ -97,9 +97,9 @@ cd YueJS
 docker build --tag yue .
 
 # database is not in the container
-docker create -it --network=host --name yue yue
+docker create -it -v ./temp:/app/temp --network=host --name yue yue
 # database is in the container
-docker create -it --name yue yue
+docker create -it -v ./temp:/app/temp --name yue yue
 
 # run container!
 docker start yue

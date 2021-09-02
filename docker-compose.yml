@@ -4,6 +4,8 @@ services:
     build: .
     restart: always
     working_dir: /app
+    volumes:
+      - ./temp:/app/temp
     depends_on:
       - database
   database:
