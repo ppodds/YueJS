@@ -1,5 +1,11 @@
 version: "2"
 services:
+  app:
+    build: .
+    restart: always
+    working_dir: /app
+    depends_on:
+      - database
   database:
     image: mariadb:latest
     restart: always

@@ -16,6 +16,8 @@ cd YueJS
 npm install
 ```
 
+If you encounter error, try to use docker to deploy your bot.
+
 ### Configure Config Files
 
 config files at `src/config`
@@ -51,11 +53,15 @@ db-config.json
 }
 ```
 
+Note:
+Change `"host": "localhost"` as `"host": "database"` if you are using docker!
+
 ### Prepare Database
 
 You need to install [mariadb](https://mariadb.org/download/) and sure it could work properly.
 
-There is a `docker-compose.yml` can build a test database service in few minutes. If you use it, you don't need to change `db-config.json`.
+Note:
+There is a `docker-compose.yml` can build a test database service in few minutes.
 
 ### Run Bot
 
