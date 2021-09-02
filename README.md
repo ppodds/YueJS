@@ -85,3 +85,22 @@ Privileged intent provided is not enabled or whitelisted.
 
 Try to enable options below
 ![Discord Bot Portal Intents](docs/intent.png)
+
+## Deploy
+
+### Docker (Recommended)
+
+Run following commands.
+
+```shell
+cd YueJS
+docker build --tag yue .
+
+# database is not in the container
+docker create -it --network=host --name yue yue
+# database is in the container
+docker create -it --name yue yue
+
+# run container!
+docker start yue
+```
