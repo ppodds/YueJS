@@ -93,13 +93,15 @@ Try to enable options below
 Run following commands.
 
 ```shell
-cd YueJS
+cd ${project_path}
 docker build --tag yue .
 
 # database is not in the container
-docker create -it -v ./temp:/app/temp --network=host --name yue yue
+docker create -it -v ${project_path}/temp:/app/temp --network=host --name yue yue
 # database is in the container
-docker create -it -v ./temp:/app/temp --name yue yue
+docker create -it -v ${project_path}/temp:/app/temp --name yue yue
+
+# Note: only allow absolute path
 
 # run container!
 docker start yue
