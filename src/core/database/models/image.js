@@ -73,7 +73,7 @@ module.exports = {
                     allowNull: false,
                 },
                 image: {
-                    type: DataTypes.BLOB("medium"),
+                    type: DataTypes.BLOB("long"),
                     allowNull: false,
                 },
             },
