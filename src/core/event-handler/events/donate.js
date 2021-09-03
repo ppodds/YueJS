@@ -7,6 +7,7 @@ const { Image } = require("../../database/models/image");
 const { send } = require("../../graphics/message");
 const ImageManager = require("../../image/ImageManager");
 const { makeRegularImage } = require("../../image/imageSimilar");
+const { User } = require("../../database/models/user");
 
 module.exports = {
     name: "messageCreate",
@@ -56,6 +57,15 @@ module.exports = {
                         resp.data
                     );
                     await donor.increment("amount", { by: 1 });
+                    // update contribution
+                    const user = await User.get(message.author.id);
+
+                    await user.increment("contribution", {
+                        by: Donor.contributionRatio(
+                            Image.typeToString(donor.type)
+                        ),
+                    });
+
                     await send(message.channel, "已收到! 請繼續上傳!", 5000);
                     Logger.info(
                         `${message.author.username} uploaded ${image.id}.${image.ext} type: ${image.type}`
