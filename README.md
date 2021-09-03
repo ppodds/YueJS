@@ -106,3 +106,26 @@ docker create -it -v ${project_path}/temp:/app/temp --name yue yue
 # run container!
 docker start yue
 ```
+
+### FAQ
+
+#### Get an error when deploy commands
+
+If you get the error below, check your `bot-config.json` set `clientId` and `token` properly.
+
+```
+DiscordAPIError[20012]: You are not authorized to perform this action on this application
+    at SequentialHandler.runRequest (/app/node_modules/@discordjs/rest/dist/lib/handlers/SequentialHandler.js:198:23)
+    at processTicksAndRejections (node:internal/process/task_queues:96:5)
+    at async SequentialHandler.queueRequest (/app/node_modules/@discordjs/rest/dist/lib/handlers/SequentialHandler.js:99:20)
+    at async /app/deploy-commands.js:29:13 {
+  rawError: {
+    message: 'You are not authorized to perform this action on this application',
+    code: 20012
+  },
+  code: 20012,
+  status: 403,
+  method: 'put',
+  url: 'https://discord.com/api/v9/applications/??????????????????/commands'
+}
+```
