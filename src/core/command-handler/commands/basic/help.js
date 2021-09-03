@@ -62,18 +62,18 @@ module.exports = {
                 inline: false,
             },
             {
-                name: "pic",
-                value: "從donate pic圖庫抽一張圖(需要好感度20)",
+                name: "image pic 【編號(可選)】",
+                value: "從貢獻的pic圖庫抽一張圖(需要好感度20)",
                 inline: false,
             },
             {
-                name: "hpic",
-                value: "從donate hpic圖庫抽一張圖(需要在nsfw頻道/好感度30)",
+                name: "image hpic 【編號(可選)】",
+                value: "從貢獻的hpic圖庫抽一張圖(需要在nsfw頻道/好感度30)",
                 inline: false,
             },
             {
-                name: "wtfpic",
-                value: "從donate wtfpic圖庫抽一張圖",
+                name: "image wtfpic 【編號(可選)】",
+                value: "從貢獻的wtfpic圖庫抽一張圖",
                 inline: false,
             }
         );

@@ -31,6 +31,25 @@ class Image extends Model {
             },
         });
     }
+
+    /**
+     * Get an random image with according type
+     * @param {string} type image type
+     * @returns {Promise<Image>} a random image
+     */
+    static async random(type) {
+        const dbImageIdList = await Image.findAll({
+            where: {
+                type: Image.typeInDatabase(type),
+            },
+            attributes: ["id"],
+        });
+        const randId =
+            dbImageIdList[Math.floor(Math.random() * dbImageIdList.length)];
+
+        return randId ? await Image.get(randId.id) : null;
+    }
+
     // TODO I need an enum QAQ
 
     /**

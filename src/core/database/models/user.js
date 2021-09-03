@@ -1,6 +1,15 @@
 const { Model, DataTypes } = require("sequelize");
 
-class User extends Model {}
+class User extends Model {
+    static async get(id) {
+        const [user, created] = await User.findOrCreate({
+            where: {
+                id: id,
+            },
+        });
+        return user;
+    }
+}
 
 module.exports = {
     User: User,
