@@ -4,10 +4,7 @@ const Logger = require("../../../utils/logger");
 const { ownerOnly, setPermission } = require("../../../utils/permission");
 
 module.exports = {
-    data: new SlashCommandBuilder()
-        .setName("bye")
-        .setDescription("關閉Bot")
-        .setDefaultPermission(false),
+    data: new SlashCommandBuilder().setName("bye").setDescription("關閉Bot"),
     async init(client, name) {
         // This command is owner only
         const permissions = await ownerOnly(client);

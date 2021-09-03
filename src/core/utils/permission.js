@@ -60,13 +60,17 @@ module.exports = {
         if (env === "prod") {
             if (!client.application) await client.application?.fetch();
             commands = await client.application.commands.fetch();
+            const command = commands.find((command) => command.name === name);
+            client.guilds.cache.forEach(async (key, guild) => {
+                await command.permissions.set({ guild, permissions });
+            });
         } else {
             commands = await client.guilds.cache
                 .get(dev.guildId)
                 ?.commands.fetch();
+            await commands
+                .find((command) => command.name === name)
+                .permissions.set({ permissions });
         }
-        await commands
-            .find((command) => command.name === name)
-            .permissions.add({ permissions });
     },
 };
