@@ -36,6 +36,10 @@ RUN npm install async-lock \
     && npm install sharp
 
 COPY ./src /app/src
+COPY ./deploy-commands.js /app
 COPY ./index.js /app
+
+# deploy commands
+RUN node deploy-commands.js
 
 CMD [ "node" , "index.js"]
