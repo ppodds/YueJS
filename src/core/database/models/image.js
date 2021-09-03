@@ -19,6 +19,18 @@ class Image extends Model {
             image: data,
         });
     }
+    /**
+     * Get an Image by id
+     * @param {Number} id Image's id
+     * @returns {Promise<Image>} an Image object contains all infomation
+     */
+    static async get(id) {
+        return await Image.findOne({
+            where: {
+                id: id,
+            },
+        });
+    }
     // TODO I need an enum QAQ
 
     /**

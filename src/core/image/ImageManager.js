@@ -77,19 +77,20 @@ class ImageManager {
         if (!Image.allowType.includes(type))
             throw new Error("type not support");
         Logger.info(`Loading images which type is ${type}...`);
-        const dbImages = await Image.findAll({
+        const dbImageIdList = await Image.findAll({
             where: {
                 type: Image.typeInDatabase(type),
             },
-            attributes: ["id", "ext", "image"],
+            attributes: ["id"],
         });
-        if (dbImages.length !== this.images.get(type).length) {
+        if (dbImageIdList.length !== this.images.get(type).length) {
             this.images.set(type, []);
             const tasks = [];
 
-            dbImages.forEach((image) => {
+            dbImageIdList.forEach((dbImageId) => {
                 tasks.push(
                     new Promise(async (resolve, reject) => {
+                        const image = await Image.get(dbImageId.id);
                         this.addImage(
                             type,
                             await makeRegularImage(image.image)

@@ -28,6 +28,12 @@ module.exports = {
                 dialect: "mariadb",
                 timezone: "+08:00",
                 logging: loggingSetting,
+                pool: {
+                    max: 200,
+                    min: 10,
+                    acquire: 144000000,
+                    idle: 10000,
+                },
             }
         );
         user.init(sequelize);
