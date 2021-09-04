@@ -61,9 +61,7 @@ module.exports = {
                     const user = await User.get(message.author.id);
 
                     await user.increment("contribution", {
-                        by: Donor.contributionRatio(
-                            Image.typeToString(donor.type)
-                        ),
+                        by: Donor.contributionRatio(donor.type),
                     });
 
                     await send(message.channel, "已收到! 請繼續上傳!", 5000);
