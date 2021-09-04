@@ -20,12 +20,13 @@ class ImageManager {
         await this.loadAll();
     }
     /**
-     * Add an regular image to memory cache.
+     * Add an regular image data to memory cache.
      * @param {string} type image type
+     * @param {Number} imageId image id
      * @param {Buffer} regularImage regular image biniary
      */
-    static addImage(type, regularImage) {
-        this.images.get(type).push(regularImage);
+    static addImage(type, imageId, regularImage) {
+        this.images.get(type).push({ id: imageId, data: regularImage });
     }
     /**
      * Save temp file.
@@ -83,23 +84,36 @@ class ImageManager {
             },
             attributes: ["id"],
         });
+
+        // id list of image in cache
+        const cacheImageMap = new Collection();
+        this.images
+            .get(type)
+            .forEach((img) => cacheImageMap.set(img.id, img.data));
+
         if (dbImageIdList.length !== this.images.get(type).length) {
-            this.images.set(type, []);
+            // this.images.set(type, []);
             const tasks = [];
 
+            // sync with database
             dbImageIdList.forEach((dbImageId) => {
-                tasks.push(
-                    new Promise(async (resolve, reject) => {
-                        const image = await Image.get(dbImageId.id);
-                        this.addImage(
-                            type,
-                            await makeRegularImage(image.image)
-                        );
-                        Logger.info(`${image.id}.${image.ext} loaded!`);
-                        resolve();
-                    })
-                );
+                if (!cacheImageMap.get(dbImageId)) {
+                    // load from database
+                    tasks.push(
+                        new Promise(async (resolve, reject) => {
+                            const image = await Image.get(dbImageId.id);
+                            this.addImage(
+                                type,
+                                dbImageId.id,
+                                await makeRegularImage(image.image)
+                            );
+                            Logger.info(`${image.id}.${image.ext} loaded!`);
+                            resolve();
+                        })
+                    );
+                }
             });
+
             await Promise.all(tasks);
         }
         Logger.info(`type ${type} load complete!`);
@@ -124,7 +138,7 @@ class ImageManager {
      */
     static async inDatabase(type, regularImage) {
         for (const dbimg of this.images.get(type)) {
-            if (await isSimilar(dbimg, regularImage)) return true;
+            if (await isSimilar(dbimg.data, regularImage)) return true;
         }
         return false;
     }

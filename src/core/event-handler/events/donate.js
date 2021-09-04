@@ -68,7 +68,7 @@ module.exports = {
                     Logger.info(
                         `${message.author.username} uploaded ${image.id}.${image.ext} type: ${image.type}`
                     );
-                    ImageManager.addImage(donor.type, regularImage);
+                    ImageManager.addImage(donor.type, image.id, regularImage);
                     if (!message.deleted && message.deletable)
                         await message.delete();
                 } else {
