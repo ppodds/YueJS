@@ -84,6 +84,18 @@ class Image extends Model {
                 throw new Error("type not support");
         }
     }
+    /**
+     * Get image amount of according type
+     * @param {string} type image type
+     * @returns {Promise<Number>} image amount
+     */
+    static async amount(type) {
+        return await Image.count({
+            where: {
+                type: Image.typeInDatabase(type),
+            },
+        });
+    }
 }
 
 module.exports = {

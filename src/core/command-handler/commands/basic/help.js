@@ -21,31 +21,31 @@ module.exports = {
                 value: "特殊指令說明",
                 inline: false,
             },
-            {
-                name: "mhelp",
-                value: "音樂相關指令說明",
-                inline: false,
-            },
+            // {
+            //     name: "mhelp",
+            //     value: "音樂相關指令說明",
+            //     inline: false,
+            // },
             {
                 name: "dhelp",
                 value: "貢獻指令說明",
                 inline: false,
             },
-            {
-                name: "ahelp",
-                value: "助手指令說明",
-                inline: false,
-            },
-            {
-                name: "rpghelp",
-                value: "RPG指令說明",
-                inline: false,
-            },
-            {
-                name: "shelp",
-                value: "股海指令說明",
-                inline: false,
-            },
+            // {
+            //     name: "ahelp",
+            //     value: "助手指令說明",
+            //     inline: false,
+            // },
+            // {
+            //     name: "rpghelp",
+            //     value: "RPG指令說明",
+            //     inline: false,
+            // },
+            // {
+            //     name: "shelp",
+            //     value: "股海指令說明",
+            //     inline: false,
+            // },
             {
                 name: "info",
                 value: "檢視系統的各項狀態",
