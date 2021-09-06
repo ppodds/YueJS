@@ -38,7 +38,9 @@ async function save(message, type, imageData) {
             by: Donor.contributionRatio(type),
         });
         Logger.info(
-            `Collect ${image.id}.${image.ext} to ${image.type} database. author: ${message.author.username}`
+            `Collect ${image.id}.${image.ext} to ${Image.typeToString(
+                image.type
+            )} database. author: ${message.author.username}`
         );
         ImageManager.addImage(type, image.id, regularImage);
     }
