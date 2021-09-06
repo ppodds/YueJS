@@ -9,12 +9,10 @@ module.exports = {
             {
                 guild: {
                     type: DataTypes.STRING,
-                    unique: true,
                     allowNull: false,
                 },
                 channel: {
                     type: DataTypes.STRING,
-                    unique: true,
                     allowNull: false,
                 },
                 time: {
