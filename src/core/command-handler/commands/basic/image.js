@@ -92,7 +92,7 @@ module.exports = {
         // user picked image (null if user doesn't assign)
         let userPicked;
         if (imageId !== null) {
-            userPicked = Image.findOne({ where: { id: imageId } });
+            userPicked = await Image.findOne({ where: { id: imageId } });
             if (!userPicked)
                 return await interaction.reply("找不到這張圖呢...");
             else if (
