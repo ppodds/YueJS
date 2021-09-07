@@ -33,7 +33,8 @@ RUN npm install async-lock \
     && npm install sequelize \
     && npm install nodemon \
     && npm install mariadb \
-    && npm install sharp
+    && npm install sharp \
+    && npm install node-worker-threads-pool
 
 COPY ./src /app/src
 COPY ./deploy-commands.js /app
