@@ -3,38 +3,39 @@ const { Image } = require("../database/models/image");
 const AsyncLock = require("async-lock");
 const Logger = require("../utils/logger");
 const fs = require("fs").promises;
-const { isSimilar, makeRegularImage } = require("./imageSimilar");
+const { isSimilar } = require("./imageSimilar");
+const { phash } = require("./phash");
 
 class ImageManager {
-    static images = new Collection();
+    static imagePhashs = new Collection();
     static lock = new AsyncLock();
     /**
      * init ImageManager
      */
     static async init() {
-        this.images.set("pic", []);
-        this.images.set("hpic", []);
-        this.images.set("wtfpic", []);
+        this.imagePhashs.set("pic", []);
+        this.imagePhashs.set("hpic", []);
+        this.imagePhashs.set("wtfpic", []);
         // TODO load processed images from json
         await this.loadJson();
         await this.loadAll();
     }
     /**
-     * Add an regular image data to memory cache.
+     * Add a phash data to memory cache.
      * @param {string} type image type
      * @param {Number} imageId image id
-     * @param {Buffer} regularImage regular image biniary
+     * @param {string} phash phash string
      */
-    static addImage(type, imageId, regularImage) {
-        this.images.get(type).push({ id: imageId, data: regularImage });
+    static addPhash(type, imageId, phash) {
+        this.imagePhashs.get(type).push({ id: imageId, data: phash });
     }
     /**
      * Save temp file.
      */
     static async save() {
         await this.lock.acquire("image", () => {
-            Logger.info("Saving processed images raw data...");
-            this.images.forEach((element) =>
+            Logger.info("Saving images phash data...");
+            this.imagePhashs.forEach((element) =>
                 element.forEach(
                     (imageArray) => (imageArray = JSON.stringify(imageArray))
                 )
@@ -42,9 +43,9 @@ class ImageManager {
             fs.writeFile(
                 "./temp/imageTmp.json",
                 JSON.stringify({
-                    pic: this.images.get("pic"),
-                    hpic: this.images.get("hpic"),
-                    wtfpic: this.images.get("wtfpic"),
+                    pic: this.imagePhashs.get("pic"),
+                    hpic: this.imagePhashs.get("hpic"),
+                    wtfpic: this.imagePhashs.get("wtfpic"),
                 })
             );
             Logger.info("Save successfully!");
@@ -56,16 +57,11 @@ class ImageManager {
     static async loadJson() {
         try {
             const dataObj = JSON.parse(
-                await fs.readFile("./temp/imageTmp.json"),
-                (key, value) => {
-                    return value && value.type === "Buffer"
-                        ? Buffer.from(value)
-                        : value;
-                }
+                await fs.readFile("./temp/imageTmp.json")
             );
-            this.images.set("pic", dataObj.pic);
-            this.images.set("hpic", dataObj.hpic);
-            this.images.set("wtfpic", dataObj.wtfpic);
+            this.imagePhashs.set("pic", dataObj.pic);
+            this.imagePhashs.set("hpic", dataObj.hpic);
+            this.imagePhashs.set("wtfpic", dataObj.wtfpic);
         } catch (err) {
             Logger.warn("Failed to read temp file!");
         }
@@ -77,7 +73,7 @@ class ImageManager {
     static async load(type) {
         if (!Image.allowType.includes(type))
             throw new Error("type not support");
-        Logger.info(`Loading images which type is ${type}...`);
+        Logger.info(`Loading image phashs which type is ${type}...`);
         const dbImageIdList = await Image.findAll({
             where: {
                 type: Image.typeInDatabase(type),
@@ -86,28 +82,28 @@ class ImageManager {
         });
 
         // id list of image in cache
-        const cacheImageMap = new Collection();
-        this.images
+        const cachePhashMap = new Collection();
+        this.imagePhashs
             .get(type)
-            .forEach((img) => cacheImageMap.set(img.id, img.data));
+            .forEach((phash) => cachePhashMap.set(phash.id, phash.data));
 
-        if (dbImageIdList.length !== this.images.get(type).length) {
-            // this.images.set(type, []);
+        if (dbImageIdList.length !== this.imagePhashs.get(type).length) {
             const tasks = [];
 
             // sync with database
             dbImageIdList.forEach((dbImageId) => {
-                if (!cacheImageMap.get(dbImageId)) {
+                if (!cachePhashMap.get(dbImageId)) {
                     // load from database
                     tasks.push(
                         new Promise(async (resolve, reject) => {
                             const image = await Image.get(dbImageId.id);
-                            this.addImage(
-                                type,
-                                dbImageId.id,
-                                await makeRegularImage(image.image)
-                            );
-                            Logger.info(`${image.id}.${image.ext} loaded!`);
+                            const data = await phash(image.image);
+                            if (phash) {
+                                this.addPhash(type, dbImageId.id, data);
+                                Logger.info(
+                                    `${image.id}.${image.ext}'s phash loaded!`
+                                );
+                            }
                             resolve();
                         })
                     );
@@ -133,14 +129,16 @@ class ImageManager {
     /**
      * Check if the picture is already in the database
      * @param {string} type image type
-     * @param {Buffer} regularImage regular image binary
+     * @param {string} phash image phash
      * @returns {Promise<boolean>} if the picture is already in the database
      */
-    static async inDatabase(type, regularImage) {
-        for (const dbimg of this.images.get(type)) {
-            if (await isSimilar(dbimg.data, regularImage)) return true;
-        }
-        return false;
+    static async inDatabase(type, phash) {
+        return new Promise((resolve, reject) => {
+            for (const imagePhash of this.imagePhashs.get(type)) {
+                if (isSimilar(imagePhash.data, phash)) resolve(true);
+            }
+            resolve(false);
+        });
     }
 }
 

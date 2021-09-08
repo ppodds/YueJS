@@ -2,7 +2,6 @@ const Logger = require("../utils/logger");
 const { statusList, statusType } = require("../../config/bot-config.json");
 const commands = require("../command-handler/command-handler");
 const fs = require("fs");
-const ImageManager = require("../image/ImageManager");
 
 let discordClient;
 
@@ -48,7 +47,6 @@ module.exports = {
                     (Date.now() - args.launchTimestamp) / 1000
                 } seconds!`
             );
-            await ImageManager.init();
         });
 
         // Slash commands

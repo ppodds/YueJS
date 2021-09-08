@@ -6,7 +6,7 @@ const FileType = require("file-type");
 const { Image } = require("../../database/models/image");
 const { send } = require("../../graphics/message");
 const ImageManager = require("../../image/ImageManager");
-const { makeRegularImage } = require("../../image/imageSimilar");
+const { phash } = require("../../image/phash");
 const { User } = require("../../database/models/user");
 
 /**
@@ -19,10 +19,10 @@ async function saveAndSendMessage(message, imageData, donor) {
     // get image ext and mime
     const filetype = await FileType.fromBuffer(imageData);
     if (filetype.mime.startsWith("image/")) {
-        const regularImage = await makeRegularImage(imageData);
+        const imagePhash = await phash(imageData);
         const inDatabase = await ImageManager.inDatabase(
             donor.type,
-            regularImage
+            imagePhash
         );
         if (inDatabase)
             // the picture is already in the database
@@ -46,7 +46,7 @@ async function saveAndSendMessage(message, imageData, donor) {
         Logger.info(
             `${message.author.username} uploaded ${image.id}.${image.ext} type: ${image.type}`
         );
-        ImageManager.addImage(donor.type, image.id, regularImage);
+        ImageManager.addPhash(donor.type, image.id, imagePhash);
         if (!message.deleted && message.deletable) await message.delete();
     } else {
         await send(message.channel, "這不是我能使用的呢....", 20000);

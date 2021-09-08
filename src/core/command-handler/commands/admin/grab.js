@@ -7,7 +7,7 @@ const { Grab } = require("../../../database/models/grab");
 const FileType = require("file-type");
 const { User } = require("../../../database/models/user");
 const { Donor } = require("../../../database/models/donor");
-const { makeRegularImage } = require("../../../image/imageSimilar");
+const { phash } = require("../../../image/phash");
 const axios = require("axios").default;
 const { toDatetimeString } = require("../../../utils/time");
 
@@ -21,8 +21,8 @@ async function save(message, type, imageData) {
     // get image ext and mime
     const filetype = await FileType.fromBuffer(imageData);
     if (filetype.mime.startsWith("image/")) {
-        const regularImage = await makeRegularImage(imageData);
-        const inDatabase = await ImageManager.inDatabase(type, regularImage);
+        const imagePhash = await phash(imageData);
+        const inDatabase = await ImageManager.inDatabase(type, imagePhash);
         if (inDatabase) return;
 
         const image = await Image.add(
@@ -42,7 +42,7 @@ async function save(message, type, imageData) {
                 image.type
             )} database. author: ${message.author.username}`
         );
-        ImageManager.addImage(type, image.id, regularImage);
+        ImageManager.addPhash(type, image.id, imagePhash);
     }
 }
 

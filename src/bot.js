@@ -1,10 +1,11 @@
-const launchTimestamp = Date.now();
-
 const { Client, Intents } = require("discord.js");
 const Logger = require("./core/utils/logger");
 const eventManager = require("./core/event-handler/event-handler");
 const dbManager = require("./core/database/manager");
+const ImageManager = require("./core/image/ImageManager");
 const { token } = require("./config/bot-config.json");
+
+const launchTimestamp = Date.now();
 
 // Create the Discord client with the appropriate options
 const client = new Client({
@@ -29,15 +30,21 @@ const client = new Client({
     partials: ["CHANNEL"],
 });
 
-// Init event manager
-eventManager.init(client, { launchTimestamp });
-
-// Init database manager
-dbManager.init();
+dbManager
+    .init()
+    .then(
+        ImageManager.init().then(eventManager.init(client, { launchTimestamp }))
+    );
 
 client
     .login(token)
-    .then(() => Logger.info("Logged into Discord successfully"))
+    .then(() => {
+        Logger.info("Logged into Discord successfully");
+        client.user.setActivity(
+            "「現在剛起床還沒搞清楚狀況... 等一下再叫我吧...」",
+            { type: "LISTENING" }
+        );
+    })
     .catch((err) => {
         Logger.error("Error logging into Discord", err);
         process.exit();
