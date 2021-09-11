@@ -22,6 +22,11 @@ module.exports = {
                 inline: false,
             },
             {
+                name: "playing",
+                value: "觀看正在撥放中的歌曲資訊",
+                inline: false,
+            },
+            {
                 name: "stop",
                 value: "讓Yue離開 並清空預計要唱的歌曲",
                 inline: false,
