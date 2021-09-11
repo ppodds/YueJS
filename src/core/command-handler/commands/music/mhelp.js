@@ -17,6 +17,11 @@ module.exports = {
                 inline: false,
             },
             {
+                name: "join",
+                value: "讓Yue加入你所在的頻道",
+                inline: false,
+            },
+            {
                 name: "stop",
                 value: "讓Yue離開 並清空預計要唱的歌曲",
                 inline: false,
