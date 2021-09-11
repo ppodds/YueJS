@@ -9,7 +9,7 @@ const PlayerManager = require("../../../music/PlayerManager");
 module.exports = {
     data: new SlashCommandBuilder()
         .setName("queue")
-        .setDescription("觀看接下來幾首歌曲的順序"),
+        .setDescription("觀看接下來歌曲的順序"),
     async execute(interaction) {
         const user = interaction.member;
 

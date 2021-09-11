@@ -22,8 +22,28 @@ module.exports = {
                 inline: false,
             },
             {
+                name: "queue",
+                value: "觀看接下來歌曲的順序",
+                inline: false,
+            },
+            {
                 name: "playing",
                 value: "觀看正在撥放中的歌曲資訊",
+                inline: false,
+            },
+            {
+                name: "pause",
+                value: "讓Yue暫停唱歌",
+                inline: false,
+            },
+            {
+                name: "resume",
+                value: "讓Yue繼續唱歌",
+                inline: false,
+            },
+            {
+                name: "skip",
+                value: "讓Yue跳過當前正在唱的歌",
                 inline: false,
             },
             {
