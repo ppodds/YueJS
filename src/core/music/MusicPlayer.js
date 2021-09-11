@@ -181,11 +181,11 @@ class MusicPlayer {
 
         const nextTrack = this._queue.shift();
         try {
-            this._player.play(nextTrack);
             this._current = nextTrack;
             this._np = await this._channel.send(
                 `**正在撥放:** \`${this._current.metadata.videoDetails.title}\` 點歌者: \`${this._current.metadata.requester.displayName}\``
             );
+            this._player.play(nextTrack);
             this.queueLock = false;
         } catch (err) {
             this.queueLock = false;
@@ -202,6 +202,17 @@ class MusicPlayer {
         this._player.stop(true);
         this._queue = null;
         this.destroyed = true;
+    }
+    /**
+     * Change connected voice channel
+     *
+     * if new channel and old channel is the same, return true.
+     * @returns {boolean} is success
+     */
+    changeChannel(channel) {
+        if (this._channel.id !== channel.id)
+            return this._connection.rejoin({ channelId: channel.id });
+        return true;
     }
 }
 

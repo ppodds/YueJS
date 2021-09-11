@@ -23,11 +23,18 @@ class PlayerManager {
         }
     }
     /**
+     * Check whether the guild's music player exists
+     * @param {Guild} guild guild object
+     */
+    static exist(guild) {
+        return this.players.get(guild.id) ? true : false;
+    }
+    /**
      * Delete guild's music player
      * @param {Guild} guild target guild
      */
     static cleanup(guild) {
-        const musicPlayer = this.players.get(interaction.guildId);
+        const musicPlayer = this.players.get(guild.id);
         musicPlayer.destroy();
         this.players.delete(guild.id);
     }

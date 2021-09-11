@@ -61,6 +61,9 @@ module.exports = {
                 await command.execute(interaction);
             } catch (error) {
                 Logger.error("Command threw an error", error);
+                if (env === "dev") {
+                    console.log(error);
+                }
                 const content = {
                     content:
                         env === "dev" ? error.message : "指令在執行階段出錯了!",
