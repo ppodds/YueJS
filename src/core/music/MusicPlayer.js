@@ -164,6 +164,15 @@ class MusicPlayer {
             throw err;
         }
     }
+    skip() {
+        this._player.stop();
+    }
+    pause() {
+        this._player.pause();
+    }
+    resume() {
+        this._player.unpause();
+    }
     /**
      * Attempts to play a Track from the queue
      */
