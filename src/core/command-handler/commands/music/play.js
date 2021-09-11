@@ -17,6 +17,8 @@ module.exports = {
 
         if (!user)
             return await interaction.reply("似乎在私聊時不能做這些呢....");
+        else if (!interaction.member.voice.channelId)
+            return await interaction.reply("看起來你不在語音頻道裡呢...");
 
         await interaction.deferReply();
 
