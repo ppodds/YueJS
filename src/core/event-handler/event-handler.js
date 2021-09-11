@@ -1,5 +1,5 @@
 const Logger = require("../utils/logger");
-const { statusList, statusType } = require("../../config/bot-config.json");
+const { env, statusList, statusType } = require("../../config/bot-config.json");
 const commands = require("../command-handler/command-handler");
 const fs = require("fs");
 
@@ -61,10 +61,18 @@ module.exports = {
                 await command.execute(interaction);
             } catch (error) {
                 Logger.error("Command threw an error", error);
-                await interaction.reply({
-                    content: "指令在執行階段出錯了!",
+                const content = {
+                    content:
+                        env === "dev" ? error.message : "指令在執行階段出錯了!",
                     ephemeral: true,
-                });
+                };
+                if (interaction.deferred) {
+                    await interaction.editReply(content);
+                } else if (interaction.replied) {
+                    await interaction.followUp(content);
+                } else {
+                    await interaction.reply(content);
+                }
             }
         });
 

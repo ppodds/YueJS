@@ -20,9 +20,12 @@ RUN npm install discord.js @discordjs/rest discord-api-types @discordjs/builders
 
 # voice support
 
-RUN npm install @discordjs/voice \
-    npm install sodium \
-    && npm install @discordjs/opus 
+RUN npm install ffmpeg-static \
+    && npm install @discordjs/voice \
+    && npm install sodium \
+    && npm install @discordjs/opus \
+    && npm install ytdl-core \
+    && npm install ytdl-core-discord 
 
 # other package
 

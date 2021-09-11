@@ -21,11 +21,11 @@ module.exports = {
                 value: "特殊指令說明",
                 inline: false,
             },
-            // {
-            //     name: "mhelp",
-            //     value: "音樂相關指令說明",
-            //     inline: false,
-            // },
+            {
+                name: "mhelp",
+                value: "音樂相關指令說明",
+                inline: false,
+            },
             {
                 name: "dhelp",
                 value: "貢獻指令說明",
