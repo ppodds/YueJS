@@ -182,7 +182,12 @@ class MusicPlayer {
             this._player.state.status !== AudioPlayerStatus.Idle ||
             this._queue.length === 0
         ) {
-            if (this._queue.length === 0) this.destroy();
+            if (this._queue.length === 0) {
+                await this._channel.send(
+                    "清單中的歌曲都唱完啦! 那我就先去休息了!"
+                );
+                this.destroy();
+            }
             return;
         }
 
