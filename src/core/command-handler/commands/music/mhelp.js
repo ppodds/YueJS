@@ -13,7 +13,7 @@ module.exports = {
         embed.addFields(
             {
                 name: "play",
-                value: "讓Yue唱Youtube有的歌曲(不建議使用關鍵字 結果不一定準確)",
+                value: "讓Yue唱Youtube有的歌曲",
                 inline: false,
             },
             {
