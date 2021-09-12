@@ -27,6 +27,11 @@ RUN npm install ffmpeg-static \
     && npm install ytdl-core \
     && npm install ytdl-core-discord 
 
+# youtube package
+
+RUN npm install ytpl \
+    && npm install ytsr
+
 # other package
 
 RUN npm install async-lock \
