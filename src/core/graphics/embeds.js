@@ -156,40 +156,40 @@ module.exports = {
                     buttonList.push(
                         new MessageButton()
                             .setCustomId("one")
-                            .setLabel(reactions.one)
-                            .setStyle("PRIMARY")
+                            .setEmoji(reactions.one)
+                            .setStyle("SECONDARY")
                     );
                     break;
                 case 1:
                     buttonList.push(
                         new MessageButton()
                             .setCustomId("two")
-                            .setLabel(reactions.two)
-                            .setStyle("PRIMARY")
+                            .setEmoji(reactions.two)
+                            .setStyle("SECONDARY")
                     );
                     break;
                 case 2:
                     buttonList.push(
                         new MessageButton()
                             .setCustomId("three")
-                            .setLabel(reactions.three)
-                            .setStyle("PRIMARY")
+                            .setEmoji(reactions.three)
+                            .setStyle("SECONDARY")
                     );
                     break;
                 case 3:
                     buttonList.push(
                         new MessageButton()
                             .setCustomId("four")
-                            .setLabel(reactions.four)
-                            .setStyle("PRIMARY")
+                            .setEmoji(reactions.four)
+                            .setStyle("SECONDARY")
                     );
                     break;
                 case 4:
                     buttonList.push(
                         new MessageButton()
                             .setCustomId("five")
-                            .setLabel(reactions.five)
-                            .setStyle("PRIMARY")
+                            .setEmoji(reactions.five)
+                            .setStyle("SECONDARY")
                     );
                     break;
             }
