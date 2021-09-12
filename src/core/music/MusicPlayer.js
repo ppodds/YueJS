@@ -164,6 +164,14 @@ class MusicPlayer {
             throw err;
         }
     }
+    addList(resources) {
+        try {
+            resources.forEach((resource) => this._queue.push(resource));
+            this.processQueue();
+        } catch (err) {
+            throw err;
+        }
+    }
     skip() {
         this._player.stop();
     }

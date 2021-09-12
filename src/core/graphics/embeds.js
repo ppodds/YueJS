@@ -6,6 +6,7 @@ const {
 } = require("discord.js");
 const colors = require("./colors");
 const { author } = require("../../config/bot-config.json");
+const reactions = require("./reactions");
 
 module.exports = {
     info(client, description, color) {
@@ -124,6 +125,146 @@ module.exports = {
         });
 
         return curPage;
+    },
+    /**
+     * Send a select menu embed reply
+     * @param {Interaction} interaction interaction object of interaction event
+     * @param {MessageEmbed} embed original embed
+     * @param {number} options options amount (1~5)
+     * @param {Function} callback option callback function Ex: function foo(option) {}
+     * @param {number} timeout timeout(ms)
+     * @returns {Promise<Message>} reply message
+     */
+    async selectMenuEmbed(
+        interaction,
+        embed,
+        options,
+        callback,
+        timeout = 60000
+    ) {
+        if (!embed) throw new Error("Embed are not given.");
+        if (!options) throw new Error("options amount are not given.");
+        if (options > 5 || options < 1)
+            throw new Error("options amount need be a integer in 1~5.");
+        if (!callback)
+            throw new Error("options callback function are not given.");
+
+        const buttonList = [];
+        for (let i = 0; i < options; i++) {
+            switch (i) {
+                case 0:
+                    buttonList.push(
+                        new MessageButton()
+                            .setCustomId("one")
+                            .setLabel(reactions.one)
+                            .setStyle("PRIMARY")
+                    );
+                    break;
+                case 1:
+                    buttonList.push(
+                        new MessageButton()
+                            .setCustomId("two")
+                            .setLabel(reactions.two)
+                            .setStyle("PRIMARY")
+                    );
+                    break;
+                case 2:
+                    buttonList.push(
+                        new MessageButton()
+                            .setCustomId("three")
+                            .setLabel(reactions.three)
+                            .setStyle("PRIMARY")
+                    );
+                    break;
+                case 3:
+                    buttonList.push(
+                        new MessageButton()
+                            .setCustomId("four")
+                            .setLabel(reactions.four)
+                            .setStyle("PRIMARY")
+                    );
+                    break;
+                case 4:
+                    buttonList.push(
+                        new MessageButton()
+                            .setCustomId("five")
+                            .setLabel(reactions.five)
+                            .setStyle("PRIMARY")
+                    );
+                    break;
+            }
+        }
+
+        const row = new MessageActionRow().addComponents(buttonList);
+        let menuEmbed;
+        if (interaction.deferred) {
+            // menuEmbed = await interaction.editReply({
+            //     content: "請選擇以下選項",
+            //     fetchReply: true,
+            // });
+            menuEmbed = await interaction.editReply({
+                embeds: [embed],
+                components: [row],
+                fetchReply: true,
+            });
+        } else {
+            menuEmbed = await interaction.reply({
+                embeds: [embed],
+                components: [row],
+                fetchReply: true,
+            });
+        }
+
+        const filter = (i) =>
+            i.customId === "one" ||
+            i.customId === "two" ||
+            i.customId === "three" ||
+            i.customId === "four" ||
+            i.customId === "five";
+
+        const collector = await menuEmbed.createMessageComponentCollector({
+            filter,
+            time: timeout,
+        });
+
+        collector.on("collect", async (i) => {
+            switch (i.customId) {
+                case "one":
+                    callback(0);
+                    break;
+                case "two":
+                    callback(1);
+                    break;
+                case "three":
+                    callback(2);
+                    break;
+                case "four":
+                    callback(3);
+                    break;
+                case "five":
+                    callback(4);
+                    break;
+                default:
+                    break;
+            }
+            await i.deferUpdate();
+            collector.stop("user select");
+        });
+
+        collector.on("end", () => {
+            if (!menuEmbed.deleted) {
+                buttonList.forEach((button) => button.setDisabled(true));
+                const disabledRow = new MessageActionRow().addComponents(
+                    buttonList
+                );
+                menuEmbed.edit({
+                    embeds: [embed],
+                    components: [disabledRow],
+                });
+            }
+        });
+
+        return menuEmbed;
     },
     /**
      * Generate a button list for paginationEmbed
