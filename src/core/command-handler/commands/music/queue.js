@@ -66,13 +66,14 @@ module.exports = {
             }
 
             const pages = [];
+            let count = 0;
             pagesData.forEach((pageData) => {
                 const embed = generateEmbed();
 
-                for (const idx in pageData) {
+                for (const track of pageData) {
                     embed.addField(
-                        (parseInt(idx) + 1).toString(),
-                        queue[idx].metadata.videoDetails.title
+                        (count += 1).toString(),
+                        track.metadata.videoDetails.title
                     );
                 }
 
