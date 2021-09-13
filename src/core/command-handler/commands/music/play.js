@@ -51,9 +51,14 @@ module.exports = {
             } catch (err) {
                 // use key word search
                 const searchResult = await ytsr(target, { limit: 5 });
+                if (searchResult.items.length === 0)
+                    return await interaction.editReply(
+                        "我找不到有這個關鍵字的歌曲呢..."
+                    );
+
                 let description =
                     "「我找到了這些結果，在下面選一個吧!」(時限60秒)";
-                for (let i = 0; i < 5; i++) {
+                for (let i = 0; i < searchResult.items.length; i++) {
                     description += `
 ${i + 1}. ${reactions.item} [${searchResult.items[i].title}](${
                         searchResult.items[i].url
@@ -61,16 +66,21 @@ ${i + 1}. ${reactions.item} [${searchResult.items[i].title}](${
                 }
 
                 const embed = info(interaction.client, description);
-                await selectMenuEmbed(interaction, embed, 5, async (option) => {
-                    const resource = await musicPlayer.createResource(
-                        searchResult.items[option].url,
-                        user
-                    );
-                    musicPlayer.add(resource);
-                    await interaction.followUp(
-                        `\`\`\`[已增加 ${searchResult.items[option].title} 到撥放序列中]\`\`\``
-                    );
-                });
+                await selectMenuEmbed(
+                    interaction,
+                    embed,
+                    searchResult.items.length,
+                    async (option) => {
+                        const resource = await musicPlayer.createResource(
+                            searchResult.items[option].url,
+                            user
+                        );
+                        musicPlayer.add(resource);
+                        await interaction.followUp(
+                            `\`\`\`[已增加 ${searchResult.items[option].title} 到撥放序列中]\`\`\``
+                        );
+                    }
+                );
             }
         }
     },
