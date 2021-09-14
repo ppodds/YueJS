@@ -30,22 +30,21 @@ const client = new Client({
     partials: ["CHANNEL"],
 });
 
-dbManager
-    .init()
-    .then(
-        ImageManager.init().then(eventManager.init(client, { launchTimestamp }))
-    );
-
-client
-    .login(token)
-    .then(() => {
+async function preLaunch(client) {
+    await dbManager.init();
+    try {
+        await client.login(token);
         Logger.info("Logged into Discord successfully");
-        client.user.setActivity(
-            "「現在剛起床還沒搞清楚狀況... 等一下再叫我吧...」",
-            { type: "LISTENING" }
-        );
-    })
-    .catch((err) => {
+    } catch (err) {
         Logger.error("Error logging into Discord", err);
         process.exit();
-    });
+    }
+    await client.user.setActivity(
+        "「現在剛起床還沒搞清楚狀況... 等一下再叫我吧...」",
+        { type: "LISTENING" }
+    );
+    await ImageManager.init();
+    eventManager.init(client, { launchTimestamp });
+}
+
+preLaunch(client);
