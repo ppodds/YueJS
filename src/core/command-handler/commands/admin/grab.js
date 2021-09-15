@@ -154,16 +154,6 @@ module.exports = {
             // no more message!
             if (messages.size !== 100) done = true;
         }
-        // update grab time
-        if (grabData) {
-            grabData.time = grabTime;
-            await grabData.save();
-        } else
-            await Grab.create({
-                guild: interaction.guildId,
-                channel: channel.id,
-                time: grabTime,
-            });
         now = new Date();
 
         await interaction.editReply(
@@ -177,5 +167,15 @@ module.exports = {
                 )
             )}以來的 ${messageCount} 則訊息中擷取了 ${imageCount} 張圖片，再繼續學習下去很快就會變得厲害了呢....`
         );
+        // update grab time
+        if (grabData) {
+            grabData.time = grabTime;
+            await grabData.save();
+        } else
+            await Grab.create({
+                guild: interaction.guildId,
+                channel: channel.id,
+                time: grabTime,
+            });
     },
 };
