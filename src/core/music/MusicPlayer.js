@@ -139,14 +139,9 @@ class MusicPlayer {
      */
     async createResource(url, requester) {
         try {
-            const stream = await ytdlDiscord(url);
             const metadata = await ytdl.getBasicInfo(url);
             metadata.requester = requester;
-            const resource = createAudioResource(stream, {
-                metadata: metadata,
-                inputType: StreamType.Opus,
-            });
-            return resource;
+            return { url: url, metadata: metadata };
         } catch (err) {
             throw new Error("找不到指定的Youtube影片呢...");
         }
@@ -203,11 +198,16 @@ class MusicPlayer {
 
         const nextTrack = this._queue.shift();
         try {
-            this._current = nextTrack;
+            const stream = await ytdlDiscord(nextTrack.url);
+            const resource = createAudioResource(stream, {
+                metadata: nextTrack.metadata,
+                inputType: StreamType.Opus,
+            });
+            this._current = resource;
             this._np = await this._channel.send(
                 `**正在撥放:** \`${this._current.metadata.videoDetails.title}\` 點歌者: \`${this._current.metadata.requester.displayName}\``
             );
-            this._player.play(nextTrack);
+            this._player.play(resource);
             this.queueLock = false;
         } catch (err) {
             this.queueLock = false;
