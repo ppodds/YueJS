@@ -92,7 +92,7 @@ class ImageManager {
 
             // sync with database
             dbImageIdList.forEach((dbImageId) => {
-                if (!cachePhashMap.get(dbImageId)) {
+                if (!cachePhashMap.get(dbImageId.id)) {
                     // load from database
                     tasks.push(
                         new Promise(async (resolve, reject) => {
