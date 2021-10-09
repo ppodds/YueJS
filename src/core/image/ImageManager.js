@@ -98,7 +98,7 @@ class ImageManager {
                         new Promise(async (resolve, reject) => {
                             const image = await Image.get(dbImageId.id);
                             const data = await phash(image.image);
-                            if (phash) {
+                            if (data) {
                                 this.addPhash(type, dbImageId.id, data);
                                 Logger.info(
                                     `${image.id}.${image.ext}'s phash loaded!`
