@@ -29,7 +29,7 @@ module.exports = {
                 timezone: "+08:00",
                 logging: loggingSetting,
                 pool: {
-                    max: 200,
+                    max: 50,
                     min: 10,
                     acquire: 144000000,
                     idle: 10000,
