@@ -15,8 +15,7 @@ module.exports = {
         client = discordClient,
         args = { launchTimestamp: Date.now() }
     ) {
-        // Ready event, which gets fired only once when the bot reaches the ready state
-        client.once("ready", async () => {
+        (async () => {
             const updateBotStatus = async () => {
                 await client.user.setActivity(
                     statusList[Math.floor(Math.random() * statusList.length)],
@@ -47,7 +46,7 @@ module.exports = {
                     (Date.now() - args.launchTimestamp) / 1000
                 } seconds!`
             );
-        });
+        })();
 
         // Slash commands
         client.on("interactionCreate", async (interaction) => {
