@@ -181,6 +181,7 @@ class MusicPlayer {
      */
     async processQueue() {
         if (
+            this.destroyed ||
             this._queueLock ||
             this._player.state.status !== AudioPlayerStatus.Idle ||
             this._queue.length === 0
