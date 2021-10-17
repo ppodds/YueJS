@@ -10,6 +10,7 @@ module.exports = {
      * @returns {boolean} if the two pictures are similar
      */
     isSimilar(phash1, phash2) {
+        if (phash1 == null || phash2 == null) return false;
         const LEVEL = 0.2;
         return distance(phash1, phash2) < LEVEL;
     },

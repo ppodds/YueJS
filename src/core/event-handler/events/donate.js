@@ -77,7 +77,7 @@ module.exports = {
         if (donor === null) return;
 
         if (message.attachments.size !== 0) {
-            // TODO check image raw and download
+            // TODO: Fix image data missing issue
 
             for (const attachmentPair of message.attachments) {
                 await message.channel.sendTyping();
