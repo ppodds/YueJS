@@ -22,6 +22,8 @@ module.exports = {
      * @returns {Promise<string>} phash string
      */
     async phash(buffer) {
+        const bufferCopy = Buffer.alloc(buffer.length);
+        buffer.copy(bufferCopy);
         const staticPool = new StaticPool({
             size: 1,
             task: async (buf) => {
@@ -137,8 +139,8 @@ module.exports = {
 
         const phash = await staticPool
             .createExecutor()
-            .setTransferList([buffer.buffer])
-            .exec(buffer);
+            .setTransferList([bufferCopy.buffer])
+            .exec(bufferCopy);
 
         staticPool.destroy();
 

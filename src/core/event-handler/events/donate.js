@@ -27,7 +27,6 @@ async function saveAndSendMessage(message, imageData, donor) {
         if (inDatabase)
             // the picture is already in the database
             return await send(message.channel, "Yue已經有這個了....", 20000);
-
         const image = await Image.add(
             donor.type,
             message.author.id,
@@ -77,8 +76,6 @@ module.exports = {
         if (donor === null) return;
 
         if (message.attachments.size !== 0) {
-            // TODO: Fix image data missing issue
-
             for (const attachmentPair of message.attachments) {
                 await message.channel.sendTyping();
                 const attachment = attachmentPair[1];
