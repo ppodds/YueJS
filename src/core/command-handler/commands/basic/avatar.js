@@ -11,8 +11,8 @@ module.exports = {
     async execute(interaction) {
         const embed = info(interaction.client, "「看來這就是你要的呢...」");
         const target = interaction.options.getUser("target");
-        if (target) embed.setImage(target.displayAvatarURL());
-        else embed.setImage(interaction.user.displayAvatarURL());
+        if (target) embed.setImage(target.avatarURL());
+        else embed.setImage(interaction.user.avatarURL());
         await interaction.reply({ embeds: [embed] });
     },
 };
