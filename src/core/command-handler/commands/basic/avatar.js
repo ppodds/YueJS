@@ -11,8 +11,18 @@ module.exports = {
     async execute(interaction) {
         const embed = info(interaction.client, "「看來這就是你要的呢...」");
         const target = interaction.options.getUser("target");
-        if (target) embed.setImage(target.avatarURL());
-        else embed.setImage(interaction.user.avatarURL());
+        if (target)
+            embed.setImage(
+                target.avatarURL({ dynamic: true, format: "png", size: 1024 })
+            );
+        else
+            embed.setImage(
+                interaction.user.avatarURL({
+                    dynamic: true,
+                    format: "png",
+                    size: 1024,
+                })
+            );
         await interaction.reply({ embeds: [embed] });
     },
 };
