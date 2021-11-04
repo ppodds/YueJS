@@ -58,7 +58,8 @@ module.exports = {
         )
         .addIntegerOption((option) =>
             option.setName("range").setDescription("時機範圍")
-        ),
+        )
+        .setDefaultPermission(false),
     async init(client, name) {
         // This command is owner only
         const permissions = await ownerOnly(client);
